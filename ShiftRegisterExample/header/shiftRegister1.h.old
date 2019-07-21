@@ -1,0 +1,102 @@
+#ifndef _SHIFT_REGISTER_1_H_
+#define _SHIFT_REGISTER_1_H_
+#include <avr/io.h>
+#include <util/delay.h> //required for delay functions
+
+//This Header is used for outputting to an HC595 shift register.
+//This can be modified to work with other shift registers.
+
+//definitions-----------------------
+#define OUTPUT_PORT PORTB   //port to output to shift register
+#define OUTPUT_DDR DDRB
+#define DS_POS PB0          //position of the data pin(DS)
+#define SH_CP_POS PB1       //position of the shift clock(SH_CP)
+#define ST_CP_POS PB2       //position of the store clock(ST_CP)
+//----------------------------------
+
+//initializes the shift register
+void ShiftReg_Init()
+{
+    //make the DS, SH_CP, and ST_CP lines as output
+    OUTPUT_DDR |= ((1 << DS_POS) | (1 << SH_CP_POS) | (1 << ST_CP_POS));
+    //intitialize those locations to 0
+//    OUTPUT_PORT &= (~((1 << DS_POS) | (1 << SH_CP_POS) | (1 << ST_CP_POS)));
+}
+
+//Low level macro definitions that change the DS lines
+#define ShiftRegDataHigh() (OUTPUT_PORT |= (1 << DS_POS))
+#define ShiftRegDataLow() (OUTPUT_PORT &= ( ~(1 << DS_POS) ) )
+
+//Sends a clock pulse on the SH_CP line
+void ShiftReg_Pulse()
+{
+    //pulse the shift clock
+
+    OUTPUT_PORT |= (1 << SH_CP_POS); //set high
+    OUTPUT_PORT &= ( ~(1 << SH_CP_POS) ); //set low
+}
+
+//Sends a clock pulse on the ST_CP line
+void ShiftReg_Latch()
+{
+    //pulse the store clock
+
+    OUTPUT_PORT |= (1 << ST_CP_POS); //set high
+    _delay_loop_1(1);
+
+    OUTPUT_PORT &= ( ~(1 << ST_CP_POS) ); //set low
+    _delay_loop_1(1);
+}
+
+/*
+ * Main function that writes a single byte
+ * to the output shift register
+ *
+ * Arguments:
+ *      data: a single byte of data to be written to the shift register
+ *
+ * Returns:
+ *      NONE
+ *
+ * Description:
+ *      The byte of date is serially transferred to the shift register
+ *      and then latched. The byte is the available on the outputs of 
+ *      the shift register[7:0] IC
+*/
+void ShiftReg_Write(uint8_t data)
+{
+    //send each of the 8 bits serially
+    //in the order of Most Significant Bit(MSB)
+    for(uint8_t i = 0; i < 8; ++i)
+    {
+        //output the data on DS line accordine to the
+        //value of MSB
+        if(data & 0b10000000)
+        {
+            //MSB is one so set data output to high
+            ShiftRegDataHigh();
+        }
+        else
+        {
+            //MSB is 0 so set the data output to low
+        }
+        //pulse the clock line
+        ShiftReg_Pulse();
+        //shift the data to the next bit at MSB position
+        data = data<<1;
+    }
+
+    //now that all 8 bits have been transfered to the shift register
+    //move them to the output latch
+    ShiftReg_Latch();
+}
+
+//a simple delay funtion for approx 0.5 seconds
+void Wait()
+{
+    for(uint8_t i = 0; i < 30; ++i)
+    {
+        _delay_loop_2(0);
+    }
+}
+#endif //_SHIFT_REGISTER_1_H_
