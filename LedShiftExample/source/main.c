@@ -15,6 +15,7 @@
 //#include "../header/io.h"
 #include "../header/timer.h"
 #include "../header/shiftRegister1.h"
+#include "../header/shiftRegister2.h"
 //#include "../header/pwm.h"
 #ifdef _SIMULATE_
 //#include "simAVRHeader.h"
@@ -40,6 +41,7 @@ int main(void) {
     unsigned char column = 0;
     //initialize shift register
     shiftInit();
+    shift2Init();
     while (1)
     {
         if(row < 7)
@@ -67,7 +69,8 @@ int main(void) {
             }
         }
 //       PORTA = (0x00 | (1 << column));
-       PORTC = (0xFF & ~(1 << row));
+//       PORTC = (0xFF & ~(1 << row));
+       shift2Write(0xFF & ~(1 << row));
        shiftWrite(0x00 | (1 << column));
 //        shiftWrite(0xFF);
 //        PORTC = 0x00;
