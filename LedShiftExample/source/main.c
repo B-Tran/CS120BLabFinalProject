@@ -1,7 +1,7 @@
 /*	Author: brandont
- *  Partner(s) Name: Joseph DiCarlantonio jdica001@ucr.edu
+ *  Partner(s) Name: 
  *	Lab Section:
- *	Assignment: Lab 11  Exercise 5
+ *	Assignment: Lab 12  Exercise Final Project
  *	Exercise Description: [optional - include for your own benefit]
  *
  *	I acknowledge all content contained herein, excluding template or example
