@@ -2,7 +2,7 @@
 #define _PLAYER_1_H_
 //PLAYER 1 BEGIN
 enum Player1States {Player1_Start, Player1_Init, Player1_Wait, Player1_Up,
-    Player1_Down} Player1State;
+    Player1_Down, Player1_Reset} Player1State;
 void Player1SM()
 {
     //gets button input
@@ -23,13 +23,21 @@ void Player1SM()
             Player1State = Player1_Wait;
             break;
         case Player1_Wait:
-            if(buttons == 0x01)
+            if(reset)
+            {
+                Player1State = Player1_Reset;
+            }
+            else if(buttons == 0x01 && begin && !BallLost && !reset)
             {
                 Player1State = Player1_Up;
             }
-            else if(buttons == 0x02)
+            else if(buttons == 0x02 && begin && !BallLost && !reset)
             {
                 Player1State = Player1_Down;
+            }
+            else if(BallLost)
+            {
+                Player1State = Player1_Reset;
             }
             else
             {
@@ -40,6 +48,9 @@ void Player1SM()
             Player1State = Player1_Wait;
             break;
         case Player1_Down:
+            Player1State = Player1_Wait;
+            break;
+        case Player1_Reset:
             Player1State = Player1_Wait;
             break;
         default:
@@ -84,6 +95,14 @@ void Player1SM()
                 DisplayArray[middle][colPos] = 1;
                 DisplayArray[bottom][colPos] = 1;
             }
+            break;
+        case Player1_Reset:
+            DisplayArray[top][colPos] = 0;
+            DisplayArray[middle][colPos] = 0;
+            DisplayArray[bottom][colPos] = 0;
+            top = 2;
+            middle = 3;
+            bottom = 4;
             break;
         default:
             break;

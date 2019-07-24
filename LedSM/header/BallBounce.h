@@ -2,10 +2,13 @@
 #define _BALL_BOUNCE_H_
 
 //BALL BEGIN
-enum BallStates {Ball_Start, Ball_Init, Ball_Bounce} BallState;
+enum BallStates {Ball_Start, Ball_Init, Ball_Wait, Ball_Bounce,
+                    Ball_Stop} BallState;
 
 void BallSM()
 {
+    static const uint8_t cntMax = 10;
+    static uint8_t cnt;
     uint8_t tempX;
     uint8_t tempY;
     static int8_t ballDirX;
@@ -17,10 +20,38 @@ void BallSM()
             BallState = Ball_Init;
             break;
         case Ball_Init:
-            BallState = Ball_Bounce;
+            BallState = Ball_Wait;
+            break;
+        case Ball_Wait:
+            if(begin)
+            {
+                BallState = Ball_Bounce;
+            }
+            else
+            {
+                BallState = Ball_Wait;
+            }
             break;
         case Ball_Bounce:
-            BallState = Ball_Bounce;
+            if(reset)
+            {
+                BallState = Ball_Stop;
+            }
+            else if(!BallLost && !reset)
+            {
+                BallState = Ball_Bounce;
+            }
+            else
+            {
+                BallState = Ball_Stop;
+            }
+            break;
+        case Ball_Stop:
+            //BallState = Ball_Init;
+            BallState = Ball_Init;
+            break;
+        default:
+            BallState = Ball_Start;
             break;
     }
     //actions
@@ -35,8 +66,21 @@ void BallSM()
             ballDirY = 1;//((rand() % 2) ? 1:-1);
             BallLost = 0;
             DisplayArray[Bally][Ballx] = 1;
+            cnt = 0;
+            break;
+        case Ball_Wait:
+            DisplayArray[Bally][Ballx] = 1;
             break;
         case Ball_Bounce:
+            if(cnt < cntMax)
+            {
+                cnt++;
+                return;
+            }
+            else
+            {
+                cnt = 0;
+            }
             tempX = Ballx;
             tempY = Bally;
             //if ball y position is decrementing and ball has not hit wall
@@ -117,6 +161,14 @@ void BallSM()
                 DisplayArray[tempY][tempX] = 0;
                 DisplayArray[Bally][Ballx] = 0;
             }
+            break;
+        case Ball_Stop:
+            cnt = 0;
+            DisplayArray[Bally][Ballx] = 0;
+            begin = 0x00;
+            BallLost = 0x00;
+            break;
+        default:
             break;
     }
 }

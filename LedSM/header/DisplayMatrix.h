@@ -49,7 +49,7 @@ void DisplaySM()
             {
                 col |= (DisplayArray[row_cnt][i] << i);
             }
-            if(print_flag == 0)
+            if(print_flag == 0 || reset)
             {
                 shift2Write(0xFF);
                 shiftWrite(0x00);
