@@ -98,6 +98,16 @@ void BallSM()
                     DisplayArray[Bally][Ballx-1] == 1)
             {
                 ballDirX = 1;
+                if(ballDirY == -1 && !DisplayArray[Bally+1][Ballx-1])
+                {
+                    ballDirY = 1;
+                    Bally = tempY + ballDirY;
+                }
+                else if(ballDirY == 1 && !DisplayArray[Bally-1][Ballx-1])
+                {
+                    ballDirY = -1;
+                    Bally = tempY + ballDirY;
+                }
                 Ballx += ballDirX;
             }
             else if(ballDirX == 1 && Ballx < (MATRIX_SIZE-2))
@@ -108,6 +118,16 @@ void BallSM()
                     DisplayArray[Bally][Ballx+1] == 1)
             {
                 ballDirX = -1;
+                if(ballDirY == -1 && !DisplayArray[Bally+1][Ballx+1])
+                {
+                    ballDirY = 1;
+                    Bally = tempY + ballDirY;
+                }
+                else if(ballDirY == 1 && !DisplayArray[Bally-1][Ballx+1])
+                {
+                    ballDirY = -1;
+                    Bally = tempY + ballDirY;
+                }
                 Ballx += ballDirX;
             }
             else
