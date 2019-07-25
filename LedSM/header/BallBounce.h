@@ -7,7 +7,9 @@ enum BallStates {Ball_Start, Ball_Init, Ball_Wait, Ball_Bounce,
 
 void BallSM()
 {
-    static const uint8_t cntMax = 10;
+    static const uint8_t cntMax = 5;
+    static const uint8_t cntMin = 2;
+    static uint8_t cntTop;
     static uint8_t cnt;
     uint8_t tempX;
     uint8_t tempY;
@@ -60,19 +62,20 @@ void BallSM()
         case Ball_Start:
             break;
         case Ball_Init:
-            Ballx = 4;
-            Bally = 4;
-            ballDirX = 1;//((rand() % 2) ? 1:-1);
-            ballDirY = 1;//((rand() % 2) ? 1:-1);
+            Ballx = 4 - ((rand()+randNum) % 2);
+            Bally = 4 - ((rand()+randNum) % 2);
+            ballDirX = (((rand()+randNum) % 2) ? 1:-1);
+            ballDirY = (((rand()+randNum) % 2) ? 1:-1);
             BallLost = 0;
             DisplayArray[Bally][Ballx] = 1;
             cnt = 0;
+            cntTop = cntMax;
             break;
         case Ball_Wait:
             DisplayArray[Bally][Ballx] = 1;
             break;
         case Ball_Bounce:
-            if(cnt < cntMax)
+            if(cnt < cntTop)
             {
                 cnt++;
                 return;
@@ -103,7 +106,6 @@ void BallSM()
                 ballDirY = -1;
                 Bally += ballDirY;
             }
- //           Bally += ballDirY;
             
             if(ballDirX == -1 && Ballx > 1)
             {
@@ -117,11 +119,17 @@ void BallSM()
                 {
                     ballDirY = 1;
                     Bally = tempY + ballDirY;
+                    cntTop = cntMin; 
                 }
                 else if(ballDirY == 1 && !DisplayArray[Bally-1][Ballx-1])
                 {
                     ballDirY = -1;
                     Bally = tempY + ballDirY;
+                    cntTop = cntMin; 
+                }
+                else
+                {
+                    cntTop = cntMax;
                 }
                 Ballx += ballDirX;
             }
@@ -137,11 +145,17 @@ void BallSM()
                 {
                     ballDirY = 1;
                     Bally = tempY + ballDirY;
+                    cntTop = cntMin; 
                 }
                 else if(ballDirY == 1 && !DisplayArray[Bally-1][Ballx+1])
                 {
                     ballDirY = -1;
                     Bally = tempY + ballDirY;
+                    cntTop = cntMin; 
+                }
+                else
+                {
+                    cntTop = cntMax;
                 }
                 Ballx += ballDirX;
             }
@@ -160,10 +174,12 @@ void BallSM()
             {
                 DisplayArray[tempY][tempX] = 0;
                 DisplayArray[Bally][Ballx] = 0;
+                BallPoint = 1;
             }
             break;
         case Ball_Stop:
             cnt = 0;
+            cntTop = cntMax;
             DisplayArray[Bally][Ballx] = 0;
             begin = 0x00;
             BallLost = 0x00;

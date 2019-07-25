@@ -25,7 +25,9 @@ void LCD_init(void) {
 	delay_ms(100);
 	LCD_WriteCommand(0x38);
 	LCD_WriteCommand(0x06);
-	LCD_WriteCommand(0x0f);
+    //f cursor on
+    //c cursor off
+	LCD_WriteCommand(0x0c);
 	LCD_WriteCommand(0x01);
 	delay_ms(10);						 
 }
