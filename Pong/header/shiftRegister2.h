@@ -10,14 +10,19 @@
 #define OUTPUT2_PORT PORTB   //port to output to shift register
 #define OUTPUT2_DDR DDRB
 #define DS2_POS PB3          //position of the data pin(DS)
+                            //pin on register is SER for HC595
 #define SH2_CP_POS PB4       //position of the shift clock(SH_CP)
+                            //pin on register is RCLK for HC595
 #define ST2_CP_POS PB5       //position of the store clock(ST_CP)
+                            //pin on register is SRCLK for HC595
 //----------------------------------
 
 void shift2Init()
 {
-   //Make the Data(DS), Shift clock (SH_CP), Store Clock (ST_CP) lines output
+   //Make the Data(DS), Shift clock (SH_CP), Store Clock (ST_CP)
+   // lines as output on the corresponding pinout
    OUTPUT2_DDR|=((1<<SH2_CP_POS)|(1<<ST2_CP_POS)|(1<<DS2_POS));
+   OUTPUT2_PORT|=((1<<SH2_CP_POS)|(1<<ST2_CP_POS)|(1<<DS2_POS));
 }
 // change data (DS)lines
 #define Shift2DataHigh() (OUTPUT2_PORT|=(1<<DS2_POS))

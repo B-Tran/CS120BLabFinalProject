@@ -117,14 +117,20 @@ int BallSM(int BallState)
                 ballDirX = 1;
                 if(ballDirY == -1 && !DisplayArray[Bally+1][Ballx-1])
                 {
-                    ballDirY = 1;
-                    Bally = tempY + ballDirY;
+                    if(Bally < (MATRIX_SIZE-2))
+                    {
+                        ballDirY = 1;
+                        Bally = tempY + ballDirY;
+                    }
                     cntTop = cntMin; 
                 }
                 else if(ballDirY == 1 && !DisplayArray[Bally-1][Ballx-1])
                 {
-                    ballDirY = -1;
-                    Bally = tempY + ballDirY;
+                    if(Bally > 1)
+                    {
+                        ballDirY = -1;
+                        Bally = tempY + ballDirY;
+                    }
                     cntTop = cntMin; 
                 }
                 else
@@ -143,20 +149,28 @@ int BallSM(int BallState)
                 ballDirX = -1;
                 if(ballDirY == -1 && !DisplayArray[Bally+1][Ballx+1])
                 {
-                    ballDirY = 1;
-                    Bally = tempY + ballDirY;
+                    if(Bally < (MATRIX_SIZE-2))
+                    {
+                        ballDirY = 1;
+                        Bally = tempY + ballDirY;
+                    }
                     cntTop = cntMin; 
                 }
                 else if(ballDirY == 1 && !DisplayArray[Bally-1][Ballx+1])
                 {
-                    ballDirY = -1;
-                    Bally = tempY + ballDirY;
+                    if(Bally > 1)
+                    {
+                        ballDirY = -1;
+                        Bally = tempY + ballDirY;
+                    }
                     cntTop = cntMin; 
                 }
                 else
                 {
                     cntTop = cntMax;
                 }
+                LCD_Cursor(16);
+
                 Ballx += ballDirX;
             }
             else
