@@ -12,9 +12,9 @@
 #define DS_POS PB0          //position of the data pin(DS)
                             //pin on register is SER for HC595
 #define SH_CP_POS PB1       //position of the shift clock(SH_CP)
-                            //pin on register is RCLK for HC595
-#define ST_CP_POS PB2       //position of the store clock(ST_CP)
                             //pin on register is SRCLK for HC595
+#define ST_CP_POS PB2       //position of the store clock(ST_CP)
+                            //pin on register is RCLK for HC595
 //----------------------------------
 
 void shiftInit()
