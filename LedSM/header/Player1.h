@@ -6,7 +6,7 @@ enum Player1States {Player1_Start, Player1_Init, Player1_Wait, Player1_Up,
 void Player1SM()
 {
     //gets button input
-    uint8_t buttons = GET_BUTTONS;
+    uint8_t buttons = GET_BUTTONSP1;
     //which side the paddle is on
     static const uint8_t colPos = 7;
     //sets the postion of paddle

@@ -7,8 +7,8 @@ enum BallStates {Ball_Start, Ball_Init, Ball_Wait, Ball_Bounce,
 
 void BallSM()
 {
-    static const uint8_t cntMax = 5;
-    static const uint8_t cntMin = 2;
+    static const uint8_t cntMax = 8;
+    static const uint8_t cntMin = 4;
     static uint8_t cntTop;
     static uint8_t cnt;
     uint8_t tempX;

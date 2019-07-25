@@ -26,8 +26,10 @@
 
 #define MATRIX_SIZE 8
 uint8_t DisplayArray[MATRIX_SIZE][MATRIX_SIZE];
-#define GET_BUTTONS (~PINA & 0x03)
-#define GET_BUTTONS2 ((~PINA & 0x0C) >> 2)
+#define GET_BUTTONSP1 (~PINA & 0x03)
+#define GET_BUTTONSSR ((~PINA & 0x0C) >> 2)
+#define GET_AI ((~PINA & 0x10) >> 4)
+#define GET_BUTTONSP2 ((~PINA & 0x60) >> 5)
 
 uint8_t Ballx;
 uint8_t Bally;
@@ -41,7 +43,7 @@ const uint8_t AIBottom = MATRIX_SIZE - 2;
 uint8_t begin;
 uint8_t reset;
 uint8_t randNum;
-
+uint8_t RoundDone;
 //SCORE BEGIN
 enum ScoreStates {Score_Start, Score_Init, Score_Wait, Score_Point,
     Score_Check ,Score_Done} 
@@ -94,6 +96,7 @@ void ScoreSM()
             }
             else if(begin && !reset)
             {
+                RoundDone = 0x00;
                 ScoreState = Score_Point;
                 LCD_ClearScreen();
                 PrintPointMsg(player1Pnt, player2Pnt);
@@ -155,6 +158,7 @@ void ScoreSM()
         case Score_Init:
             player1Pnt = 0;
             player2Pnt = 0;
+            RoundDone = 1;
             LCD_ClearScreen();
             PrintPointMsg(player1Pnt, player2Pnt);
             break;
@@ -174,6 +178,7 @@ void ScoreSM()
             }
             player1Pnt = 0;
             player2Pnt = 0;
+            RoundDone = 1;
             break;
         case Score_Check:
             break;
@@ -189,7 +194,8 @@ enum GameStates {Game_Start, Game_Init, Game_Wait, Game_Begin,
 
 void GameSM()
 {
-    uint8_t buttons = GET_BUTTONS2;
+    uint8_t buttons = GET_BUTTONSSR;
+    uint8_t AISwitch = GET_AI;
     //transitions
     switch(GameState)
     {
@@ -201,8 +207,12 @@ void GameSM()
             break;
         case Game_Wait:
 //            PORTC = 0x01;
+//            LCD_Cursor(16);
+//            LCD_WriteData(AISwitch + '0');
             if(buttons == 0x01 && !begin)
             {
+                AIMode =((AIMode && !RoundDone) ||
+                        ((AISwitch == 0x01) && RoundDone)) ? 0x01:0x00;
                 GameState = Game_Begin;
             }
             else if(buttons == 0x02)
@@ -253,6 +263,7 @@ void GameSM()
         case Game_Init:
             begin = 0x00;
             reset = 0x00;
+            AIMode = 0x00;
             break;
         case Game_Wait:
             break;
@@ -310,8 +321,8 @@ int main(void) {
     uint8_t player2ElaspsedTime = 40;
     const uint16_t BallPeriod = 50;
     uint16_t BallElaspsedTime = 50;
-    AIMode = 0x01;
-    BallLost = 0x00;
+//    AIMode = 0x01;
+//    BallLost = 0x00;
     randNum = 0;
     while (1)
     {

@@ -14,7 +14,7 @@ void Player2SM()
     else
     {
         //fix later
-        buttons = 0x00;
+        buttons = GET_BUTTONSP2;
     }
     //which side the paddle is on
     static const uint8_t colPos = 0;
