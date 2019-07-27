@@ -55,6 +55,8 @@ int AISM(int AIState)
         case AI_Init:
             AIButtons = 0x00;
             break;
+        case AI_Wait:
+            break;
         case AI_Move:
             if(AICenter > Bally && AICenter > AITop && canMove)
             {

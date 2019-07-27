@@ -13,13 +13,10 @@
 #include <time.h>
 
 #include "../header/scheduler.h"
-//#include "../header/mtimer.h"
-//#include "../header/keypad.h"
 #include "../header/io.h"
 #include "../header/timer.h"
 #include "../header/shiftRegister1.h"
 #include "../header/shiftRegister2.h"
-//#include "../header/pwm.h"
 #ifdef _SIMULATE_
 //#include "simAVRHeader.h"
 #endif
